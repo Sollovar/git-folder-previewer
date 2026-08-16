@@ -112,24 +112,7 @@ export function MainMenu({ open, onClose }: { open: boolean; onClose: () => void
             </button>
           </div>
 
-          <div className="mt-2 grid grid-cols-2 gap-1 rounded-2xl bg-secondary p-1">
-            {([
-              { key: "light", label: "Light" },
-              { key: "warm", label: "Warm" },
-            ] as { key: Theme; label: string }[]).map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setTheme(t.key)}
-                className={`rounded-xl py-2 text-sm ${
-                  theme === t.key
-                    ? "bg-card font-medium text-foreground"
-                    : "text-muted-foreground"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+
 
 
           <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
