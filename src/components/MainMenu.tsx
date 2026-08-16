@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
+import { useTheme } from "@/hooks/use-theme";
 
 
 const appItems = [
