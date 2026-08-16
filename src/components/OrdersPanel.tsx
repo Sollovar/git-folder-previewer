@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { History, MoreHorizontal, Search, Trash2, X } from "lucide-react";
+import { ChevronRight, History, Search, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
@@ -18,112 +18,22 @@ type MockOrder = {
 };
 
 const OPEN_ORDERS: MockOrder[] = [
-  {
-    pair: "BTC/USDT",
-    side: "Buy",
-    type: "Limit",
-    price: "66,850.00",
-    amount: "0.0250",
-    filled: "0.00",
-    time: "2026-08-02 12:41",
-    status: "Open",
-  },
-  {
-    pair: "ETH/USDT",
-    side: "Sell",
-    type: "Limit",
-    price: "3,248.60",
-    amount: "1.2500",
-    filled: "0.00",
-    time: "2026-08-02 12:52",
-    status: "Open",
-  },
-  {
-    pair: "SOL/USDT",
-    side: "Buy",
-    type: "Limit",
-    price: "178.90",
-    amount: "24.000",
-    filled: "6.000",
-    time: "2026-08-02 13:04",
-    status: "Partial",
-  },
-  {
-    pair: "BNB/USDT",
-    side: "Sell",
-    type: "Limit",
-    price: "612.40",
-    amount: "3.500",
-    filled: "0.00",
-    time: "2026-08-02 13:18",
-    status: "Open",
-  },
-  {
-    pair: "XRP/USDT",
-    side: "Buy",
-    type: "Limit",
-    price: "0.6120",
-    amount: "5,000",
-    filled: "1,250",
-    time: "2026-08-02 13:29",
-    status: "Partial",
-  },
-  {
-    pair: "DOGE/USDT",
-    side: "Sell",
-    type: "Limit",
-    price: "0.1180",
-    amount: "12,000",
-    filled: "0.00",
-    time: "2026-08-02 13:41",
-    status: "Open",
-  },
-  {
-    pair: "ADA/USDT",
-    side: "Buy",
-    type: "Limit",
-    price: "0.4520",
-    amount: "8,000",
-    filled: "0.00",
-    time: "2026-08-02 13:55",
-    status: "Open",
-  },
+  { pair: "BTC/USDT", side: "Buy", type: "Limit", price: "66,850.00", amount: "0.0250", filled: "0.00", time: "2026-08-02 12:41", status: "Open" },
+  { pair: "ETH/USDT", side: "Sell", type: "Limit", price: "3,248.60", amount: "1.2500", filled: "0.00", time: "2026-08-02 12:52", status: "Open" },
+  { pair: "SOL/USDT", side: "Buy", type: "Limit", price: "178.90", amount: "24.000", filled: "6.000", time: "2026-08-02 13:04", status: "Partial" },
+  { pair: "BNB/USDT", side: "Sell", type: "Limit", price: "612.40", amount: "3.500", filled: "0.00", time: "2026-08-02 13:18", status: "Open" },
+  { pair: "XRP/USDT", side: "Buy", type: "Limit", price: "0.6120", amount: "5,000", filled: "1,250", time: "2026-08-02 13:29", status: "Partial" },
+  { pair: "DOGE/USDT", side: "Sell", type: "Limit", price: "0.1180", amount: "12,000", filled: "0.00", time: "2026-08-02 13:41", status: "Open" },
+  { pair: "ADA/USDT", side: "Buy", type: "Limit", price: "0.4520", amount: "8,000", filled: "0.00", time: "2026-08-02 13:55", status: "Open" },
 ];
 
 const ORDER_HISTORY: MockOrder[] = [
-  {
-    pair: "SOL/USDT",
-    side: "Sell",
-    type: "Limit",
-    price: "182.40",
-    amount: "12.500",
-    filled: "12.500",
-    time: "2026-08-01 19:04",
-    status: "Filled",
-  },
-  {
-    pair: "ETH/USDT",
-    side: "Buy",
-    type: "Limit",
-    price: "3,120.00",
-    amount: "0.800",
-    filled: "0.000",
-    time: "2026-08-01 09:22",
-    status: "Cancelled",
-  },
+  { pair: "SOL/USDT", side: "Sell", type: "Limit", price: "182.40", amount: "12.500", filled: "12.500", time: "2026-08-01 19:04", status: "Filled" },
+  { pair: "ETH/USDT", side: "Buy", type: "Limit", price: "3,120.00", amount: "0.800", filled: "0.000", time: "2026-08-01 09:22", status: "Cancelled" },
 ];
 
 const TRADE_HISTORY: MockOrder[] = [
-  {
-    pair: "SOL/USDT",
-    side: "Sell",
-    type: "Taker",
-    price: "182.40",
-    amount: "12.500",
-    filled: "2,280.00",
-    time: "2026-08-01 19:04",
-    status: "Fee 0.68 USDT",
-  },
+  { pair: "SOL/USDT", side: "Sell", type: "Taker", price: "182.40", amount: "12.500", filled: "2,280.00", time: "2026-08-01 19:04", status: "Fee 0.68 USDT" },
 ];
 
 type LadderChild = MockOrder & { level: number };
@@ -147,15 +57,6 @@ const LADDER_PARENT: MockOrder = {
   status: "Running",
 };
 
-function EmptyState({ label }: { label: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 px-4 py-14">
-      <History className="size-8 text-muted-foreground" />
-      <p className="text-sm text-muted-foreground">No {label.toLowerCase()} yet</p>
-    </div>
-  );
-}
-
 function parseNumeric(value: string) {
   return parseFloat(value.replace(/,/g, ""));
 }
@@ -167,24 +68,33 @@ function filledPercent(amount: string, filled: string) {
   return Math.min(100, Math.max(0, (f / a) * 100));
 }
 
-function OrderCard({
+function EmptyState({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 px-4 py-16">
+      <div className="flex size-11 items-center justify-center rounded-full bg-secondary">
+        <History className="size-5 text-muted-foreground" />
+      </div>
+      <p className="text-sm text-muted-foreground">No {label.toLowerCase()} yet</p>
+    </div>
+  );
+}
+
+/** Minimal, smooth order row — side accent, price/amount, thin fill bar. */
+function OrderRow({
   o,
   onCancel,
   onClick,
   showFilled = false,
-  showStatus = false,
+  trailing,
 }: {
   o: MockOrder;
   onCancel?: () => void;
   onClick?: () => void;
   showFilled?: boolean;
-  showStatus?: boolean;
+  trailing?: string;
 }) {
   const pct = filledPercent(o.amount, o.filled);
   const isBuy = o.side === "Buy";
-  const sideColor = isBuy ? "text-bid" : "text-ask";
-  const fillColor = isBuy ? "bg-bid" : "bg-ask";
-  const fillTrack = isBuy ? "bg-bid/10" : "bg-ask/10";
 
   return (
     <div
@@ -197,69 +107,62 @@ function OrderCard({
           onClick();
         }
       }}
-      className={`rounded-xl border border-border bg-card p-4 shadow-sm transition-transform active:scale-[0.99] ${
-        onClick ? "cursor-pointer hover:border-primary/40" : ""
+      className={`group relative overflow-hidden rounded-2xl bg-secondary/40 px-4 py-3.5 transition-all duration-200 ${
+        onClick ? "cursor-pointer active:scale-[0.995] hover:bg-secondary/70" : ""
       }`}
     >
-      <div className="flex items-start justify-between">
-        <div>
+      <span
+        className={`absolute inset-y-3 left-0 w-[3px] rounded-full ${isBuy ? "bg-bid" : "bg-ask"}`}
+        aria-hidden
+      />
+
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground">{o.pair}</span>
-            <span
-              className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
-                isBuy ? "bg-bid/10 text-bid" : "bg-ask/10 text-ask"
-              }`}
-            >
+            <span className="truncate text-[15px] font-medium text-foreground">{o.pair}</span>
+            <span className={`text-[11px] font-medium ${isBuy ? "text-bid" : "text-ask"}`}>
               {o.side}
             </span>
-            <span className="text-[10px] uppercase text-muted-foreground">{o.type}</span>
           </div>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">{o.time}</p>
+          <p className="mt-0.5 text-[11px] text-muted-foreground">
+            {o.type} · {o.time.slice(5)}
+          </p>
         </div>
 
-        {onCancel ? (
-          <button
-            type="button"
-            aria-label={`Cancel ${o.pair} order`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onCancel();
-            }}
-            className="inline-flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground"
-          >
-            <X className="size-3.5" />
-            Cancel
-          </button>
-        ) : showStatus ? (
-          <span className="text-[10px] font-medium uppercase text-muted-foreground">{o.status}</span>
-        ) : null}
-      </div>
-
-      <div className="mt-3 grid grid-cols-2 gap-y-3">
-        <div>
-          <p className="text-[11px] text-muted-foreground">Price</p>
-          <p className="mt-0.5 text-sm font-medium tabular-nums text-foreground">{o.price}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-[11px] text-muted-foreground">Amount</p>
-          <p className="mt-0.5 text-sm font-medium tabular-nums text-foreground">{o.amount}</p>
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <p className="text-[15px] font-medium tabular-nums text-foreground">{o.price}</p>
+            <p className="mt-0.5 text-[11px] tabular-nums text-muted-foreground">
+              {trailing ?? o.amount}
+            </p>
+          </div>
+          {onCancel ? (
+            <button
+              type="button"
+              aria-label={`Cancel ${o.pair} order`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onCancel();
+              }}
+              className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <X className="size-4" />
+            </button>
+          ) : onClick ? (
+            <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+          ) : null}
         </div>
       </div>
 
       {showFilled && (
-        <div className="mt-3 space-y-1.5">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-muted-foreground">Filled</span>
-            <span className={`font-medium tabular-nums ${pct >= 100 ? sideColor : "text-foreground"}`}>
-              {pct.toFixed(2)}%
-            </span>
-          </div>
-          <div className={`h-1.5 w-full overflow-hidden rounded-full ${fillTrack}`}>
+        <div className="mt-3 flex items-center gap-2">
+          <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-border">
             <div
-              className={`h-full rounded-full ${fillColor} transition-all duration-500`}
+              className={`h-full rounded-full transition-all duration-500 ${isBuy ? "bg-bid" : "bg-ask"}`}
               style={{ width: `${pct}%` }}
             />
           </div>
+          <span className="text-[10px] tabular-nums text-muted-foreground">{pct.toFixed(0)}%</span>
         </div>
       )}
     </div>
@@ -295,24 +198,14 @@ export function OrdersPanel() {
     [cancelledOpen, search, status]
   );
 
-
   const rows =
-    tab === "Open Orders"
-      ? openOrders
-      : tab === "Ladder History"
-        ? [LADDER_PARENT]
-        : tab === "Order History"
-          ? ORDER_HISTORY
-          : TRADE_HISTORY;
+    tab === "Order History" ? ORDER_HISTORY : tab === "Trade History" ? TRADE_HISTORY : [];
 
   const children = LADDER_CHILDREN.filter((c) => !cancelledChildren.has(c.level));
+  const filledChildren = children.filter((c) => c.status === "Filled").length;
 
   const cancelOrder = (o: MockOrder) => {
-    setCancelledOpen((prev) => {
-      const next = new Set(prev);
-      next.add(o.pair + o.price);
-      return next;
-    });
+    setCancelledOpen((prev) => new Set(prev).add(o.pair + o.price));
     toast(`Cancelled ${o.pair} order`);
   };
 
@@ -327,57 +220,44 @@ export function OrdersPanel() {
 
   return (
     <section className="mt-2 flex flex-col rounded-2xl bg-card">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
-        <h2 className="text-xl font-semibold text-foreground">Orders</h2>
-        <button
-          type="button"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-          aria-label="Orders options"
-        >
-          <MoreHorizontal className="size-5" />
-        </button>
+      <div className="flex items-baseline justify-between px-4 pt-4">
+        <h2 className="text-lg font-semibold tracking-tight text-foreground">Orders</h2>
+        {tab === "Open Orders" && openOrders.length > 0 && (
+          <span className="text-[12px] tabular-nums text-muted-foreground">
+            {openOrders.length} active
+          </span>
+        )}
       </div>
 
-      {/* Sticky tab bar */}
-      <div className="sticky top-0 z-10 border-b border-border bg-card/95 px-4 backdrop-blur-sm">
-        <div className="flex gap-5 overflow-x-auto scrollbar-hide">
+      {/* Segmented tabs */}
+      <div className="sticky top-0 z-10 bg-card/95 px-3 py-3 backdrop-blur-sm">
+        <div className="flex gap-1 overflow-x-auto rounded-2xl bg-secondary/50 p-1 scrollbar-hide">
           {TABS.map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setTab(t)}
-              className={`relative whitespace-nowrap py-3 text-sm font-medium transition-colors ${
-                tab === t ? "text-primary" : "text-muted-foreground hover:text-foreground"
+              className={`whitespace-nowrap rounded-xl px-3 py-2 text-[12.5px] transition-all duration-200 ${
+                tab === t
+                  ? "bg-card font-medium text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {t}
-              {tab === t && (
-                <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-primary" />
-              )}
+              {t.replace(" Orders", "").replace(" History", "")}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="min-h-0 flex-1 space-y-3 px-3 pb-4 pt-3">
+      <div className="min-h-0 flex-1 space-y-2.5 px-3 pb-4">
         {tab === "Ladder History" ? (
           <>
-            <button
-              type="button"
+            <OrderRow
+              o={LADDER_PARENT}
+              showFilled
+              trailing={`${filledChildren}/${children.length} filled`}
               onClick={() => setLadderOpen(true)}
-              className="w-full text-left"
-            >
-              <OrderCard
-                o={{
-                  ...LADDER_PARENT,
-                  filled: `${children.filter((c) => c.status === "Filled").length} / ${children.length}`,
-                }}
-                showStatus
-                showFilled
-              />
-            </button>
+            />
             <Drawer open={ladderOpen} onOpenChange={setLadderOpen}>
               <DrawerContent>
                 <DrawerHeader className="pb-2 text-left">
@@ -389,34 +269,31 @@ export function OrdersPanel() {
                       All child orders cancelled
                     </p>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {children.map((c) => (
                         <div
                           key={c.level}
-                          className="flex items-center gap-3 rounded-xl bg-secondary px-3 py-3"
+                          className="flex items-center gap-3 rounded-xl bg-secondary/50 px-3 py-3"
                         >
+                          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-card text-[10px] font-medium text-muted-foreground">
+                            {c.level}
+                          </span>
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[11px] text-muted-foreground">L{c.level}</span>
-                              <span className="text-sm tabular-nums font-medium">{c.price}</span>
-                              <span className="text-[11px] text-muted-foreground">{c.status}</span>
-                            </div>
+                            <p className="text-sm font-medium tabular-nums text-foreground">
+                              {c.price}
+                            </p>
                             <p className="mt-0.5 text-[11px] tabular-nums text-muted-foreground">
-                              {c.filled} / {c.amount}
+                              {c.filled} / {c.amount} · {c.status}
                             </p>
                           </div>
                           <button
                             type="button"
                             aria-label={`Cancel level ${c.level}`}
                             onClick={() => {
-                              setCancelledChildren((prev) => {
-                                const next = new Set(prev);
-                                next.add(c.level);
-                                return next;
-                              });
+                              setCancelledChildren((prev) => new Set(prev).add(c.level));
                               toast(`Cancelled child order L${c.level}`);
                             }}
-                            className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-card text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                            className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground"
                           >
                             <X className="size-4" />
                           </button>
@@ -425,19 +302,17 @@ export function OrdersPanel() {
                     </div>
                   )}
                   {children.length > 0 && (
-                    <div className="mt-4 flex justify-center">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCancelledChildren(new Set(LADDER_CHILDREN.map((c) => c.level)));
-                          toast("Cancelled all child orders");
-                        }}
-                        className="flex items-center gap-2 rounded-xl bg-secondary px-6 py-2.5 text-sm font-medium text-ask transition-colors hover:bg-destructive hover:text-destructive-foreground"
-                      >
-                        <Trash2 className="size-4" />
-                        Cancel All
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCancelledChildren(new Set(LADDER_CHILDREN.map((c) => c.level)));
+                        toast("Cancelled all child orders");
+                      }}
+                      className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-sm font-medium text-ask transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                    >
+                      <Trash2 className="size-4" />
+                      Cancel All
+                    </button>
                   )}
                 </div>
               </DrawerContent>
@@ -453,18 +328,18 @@ export function OrdersPanel() {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search symbol"
                   aria-label="Search open orders by symbol"
-                  className="w-full rounded-xl bg-secondary py-2.5 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-xl bg-secondary/50 py-2.5 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
-              <div className="flex rounded-xl bg-secondary p-0.5">
+              <div className="flex rounded-xl bg-secondary/50 p-1">
                 {STATUS_FILTERS.map((s) => (
                   <button
                     key={s}
                     type="button"
                     onClick={() => setStatus(s)}
-                    className={`rounded-[10px] px-2.5 py-2 text-[12px] font-medium transition-colors ${
+                    className={`rounded-lg px-2.5 py-1.5 text-[12px] transition-all duration-200 ${
                       status === s
-                        ? "bg-card text-foreground shadow-sm"
+                        ? "bg-card font-medium text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
@@ -477,9 +352,9 @@ export function OrdersPanel() {
             {openOrders.length === 0 ? (
               <EmptyState label="Open Orders" />
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {openOrders.map((o) => (
-                  <OrderCard
+                  <OrderRow
                     key={o.pair + o.price}
                     o={o}
                     showFilled
@@ -489,15 +364,16 @@ export function OrdersPanel() {
                 ))}
               </div>
             )}
+
             {openOrders.length > 0 && (
-              <div className="sticky bottom-0 -mx-3 border-t border-border bg-card/95 px-3 py-3 backdrop-blur-sm">
+              <div className="sticky bottom-0 -mx-3 bg-gradient-to-t from-card via-card to-transparent px-3 pb-2 pt-4">
                 <button
                   type="button"
                   onClick={cancelAll}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-sm font-medium text-ask transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/60 py-3 text-sm font-medium text-ask transition-colors hover:bg-destructive hover:text-destructive-foreground"
                 >
                   <Trash2 className="size-4" />
-                  Cancel All Open Orders
+                  Cancel All
                 </button>
               </div>
             )}
@@ -505,13 +381,13 @@ export function OrdersPanel() {
         ) : rows.length === 0 ? (
           <EmptyState label={tab} />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {rows.map((o, i) => (
-              <OrderCard
+              <OrderRow
                 key={i}
                 o={o}
                 showFilled={tab === "Order History"}
-                showStatus
+                trailing={o.status}
                 onClick={() => setDetail(o)}
               />
             ))}
@@ -526,8 +402,8 @@ export function OrdersPanel() {
               {detail?.pair}
               {detail && (
                 <span
-                  className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
-                    detail.side === "Buy" ? "bg-bid/10 text-bid" : "bg-ask/10 text-ask"
+                  className={`text-[12px] font-medium ${
+                    detail.side === "Buy" ? "text-bid" : "text-ask"
                   }`}
                 >
                   {detail.side}
@@ -551,7 +427,10 @@ export function OrdersPanel() {
                 />
                 <DetailRow label="Created" value={detail.time} />
                 <DetailRow label="Last updated" value={detail.time} />
-                <DetailRow label="Order ID" value={`#${detail.pair.replace("/", "")}-${detail.time.slice(-5).replace(":", "")}`} />
+                <DetailRow
+                  label="Order ID"
+                  value={`#${detail.pair.replace("/", "")}-${detail.time.slice(-5).replace(":", "")}`}
+                />
               </div>
 
               {tab === "Open Orders" && (
