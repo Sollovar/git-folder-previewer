@@ -19,7 +19,6 @@ import {
 import { useState } from "react";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
-import { useTheme, type Theme } from "@/hooks/use-theme";
 
 
 const appItems = [
@@ -39,7 +38,6 @@ const productItems = [
 const groups = ["Protocol", "Company", "Legal & Privacy"];
 
 export function MainMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { theme, setTheme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
